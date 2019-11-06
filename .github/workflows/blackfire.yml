@@ -1,0 +1,42 @@
+name: Blackfire
+on:
+  push:
+    branches:
+      - master
+      - '*/blackfire'
+jobs:
+  blackfire:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: 'mysql:5.7'
+        ports:
+          - 13306:3306
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Install Blackfire
+        run: |
+          curl -sSL https://packages.blackfire.io/gpg.key | apt-key add -
+          echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list
+          apt-get -yqq update
+          apt-get -yqq blackfire-agent blackfire-php
+          blackfire-agent -register
+
+      - name: Create MySQL Database
+        run: mysql -uroot -proot -e 'CREATE DATABASE flarum_test;' --port 13306
+
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Setup Composer tests
+        run: composer test:setup
+        env:
+          DB_PORT: 13306
+          DB_PASSWORD: root
+          DB_PREFIX: ${{ matrix.prefix }}
+
+      - name: Run Composer tests
+        run: composer test
