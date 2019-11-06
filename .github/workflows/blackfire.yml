@@ -27,7 +27,8 @@ jobs:
           echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
           sudo apt-get -yqq update
           sudo apt-get -yqq install blackfire-agent blackfire-php
-          sudo blackfire-agent -register -e BLACKFIRE_SERVER_ID -e BLACKFIRE_SERVER_TOKEN
+          sudo blackfire-agent --register
+          sudo /etc/init.d/blackfire-agent start
 
       - name: Create MySQL Database
         run: mysql -uroot -proot -e 'CREATE DATABASE flarum_test;' --port 13306
