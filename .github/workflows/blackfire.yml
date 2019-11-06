@@ -19,17 +19,17 @@ jobs:
       BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
       BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
       BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
-      
+
     steps:
       - uses: actions/checkout@master
 
       - name: Install Blackfire
         run: |
-          curl -sSL https://packages.blackfire.io/gpg.key | apt-key add -
-          echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list
-          apt-get -yqq update
-          apt-get -yqq blackfire-agent blackfire-php
-          blackfire-agent -register
+          curl -sSL https://packages.blackfire.io/gpg.key | sudo apt-key add -
+          echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list
+          sudo apt-get -yqq update
+          sudo apt-get -yqq blackfire-agent blackfire-php
+          sudo blackfire-agent -register
 
       - name: Create MySQL Database
         run: mysql -uroot -proot -e 'CREATE DATABASE flarum_test;' --port 13306
