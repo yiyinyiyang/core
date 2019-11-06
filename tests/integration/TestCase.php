@@ -11,6 +11,8 @@
 
 namespace Flarum\Tests\integration;
 
+use Blackfire\Client as Blackfire;
+use Blackfire\ClientConfiguration as BlackfireConfiguration;
 use Dflydev\FigCookies\SetCookie;
 use Flarum\Foundation\InstalledSite;
 use Illuminate\Database\ConnectionInterface;
@@ -21,12 +23,31 @@ use Zend\Diactoros\ServerRequest;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
+    protected $blackfire;
+    protected $probe;
+
     public function setUp()
     {
         parent::setUp();
 
+        if ($clientId = env('BLACKFIRE_CLIENT_ID') && $clientToken = env('BLACKFIRE_CLIENT_TOKEN')) {
+            $this->blackfire = new Blackfire(new BlackfireConfiguration(
+                $clientId,
+                $clientToken
+            ));
+
+            $this->probe = $this->blackfire->createProbe();
+        }
+
         // Boot the Flarum app
         $this->app();
+    }
+
+    public function tearDown()
+    {
+        if ($this->probe) $this->blackfire->endProbe($this->probe);
+
+        parent::tearDown();
     }
 
     /**
