@@ -45,7 +45,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     public function tearDown()
     {
-        if ($this->probe) $this->blackfire->endProbe($this->probe);
+        if ($this->probe) {
+            $this->blackfire->endProbe($this->probe);
+        }
 
         parent::tearDown();
     }
