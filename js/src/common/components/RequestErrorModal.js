@@ -7,17 +7,25 @@ export default class RequestErrorModal extends Modal {
 
   title() {
     return this.props.error.xhr
-      ? this.props.error.xhr.status+' '+this.props.error.xhr.statusText
+      ? `${this.props.error.xhr.status} ${this.props.error.xhr.statusText}`
       : '';
   }
 
   content() {
+    const { error, formattedError } = this.props;
+
     let responseText;
 
-    try {
-      responseText = JSON.stringify(JSON.parse(this.props.error.responseText), null, 2);
-    } catch (e) {
-      responseText = this.props.error.responseText;
+    if (!formattedError) {
+      try {
+        const json = error.response || JSON.parse(error.responseText);
+
+        responseText = JSON.stringify(json, null, 2);
+      } catch (e) {
+        responseText = error.responseText;
+      }
+    } else {
+      responseText = formattedError.join('\n\n');
     }
 
     return <div className="Modal-body">

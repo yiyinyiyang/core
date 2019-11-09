@@ -331,19 +331,30 @@ export default class Application {
       }
 
       const isDebug = app.forum.attribute('debug');
+      const formattedError = error.response && Array.isArray(error.response.errors) && error.response.errors.map(e => unescape(e.detail));
 
       error.alert = new Alert({
         type: 'error',
         children,
         controls: isDebug && [
-          <Button className="Button Button--link" onclick={this.showDebug.bind(this, error)}>Debug</Button>
+          <Button className="Button Button--link" onclick={this.showDebug.bind(this, error, formattedError)}>Debug</Button>
         ]
       });
 
       try {
         options.errorHandler(error);
       } catch (error) {
+        if (isDebug) {
+          console.group(`${error.options.method} ${error.options.url} ${error.xhr ? error.xhr.status : ''}`);
+
+          console.error(...formattedError || [error]);
+
+          console.groupEnd();
+        }
+
         this.alerts.show(error.alert);
+        this.modal.close();
+
       }
 
       deferred.reject(error);
@@ -354,12 +365,13 @@ export default class Application {
 
   /**
    * @param {RequestError} error
+   * @param {string[]} [formattedError]
    * @private
    */
-  showDebug(error) {
+  showDebug(error, formattedError) {
     this.alerts.dismiss(this.requestError.alert);
 
-    this.modal.show(new RequestErrorModal({error}));
+    this.modal.show(new RequestErrorModal({error, formattedError}));
   }
 
   /**
