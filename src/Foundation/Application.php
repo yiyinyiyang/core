@@ -12,13 +12,13 @@
 namespace Flarum\Foundation;
 
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Contracts\Container\Container as Contract;
 use Illuminate\Events\EventServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
-class Application extends Container implements ApplicationContract
+class Application extends Container implements Contract
 {
     /**
      * The Flarum version.
@@ -436,7 +436,7 @@ class Application extends Container implements ApplicationContract
      */
     protected function markAsRegistered($provider)
     {
-        $this['events']->fire($class = get_class($provider), [$provider]);
+        $this['events']->dispatch($class = get_class($provider), [$provider]);
 
         $this->serviceProviders[] = $provider;
 
