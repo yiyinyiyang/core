@@ -11,9 +11,7 @@
 
 namespace Flarum\Notification;
 
-use Carbon\Carbon;
 use Flarum\Notification\Blueprint\BlueprintInterface;
-use Flarum\Notification\Event\Sending;
 use Flarum\Notification\Job\SendNotificationsJob;
 use Flarum\User\User;
 use Illuminate\Contracts\Queue\Queue;
@@ -167,8 +165,6 @@ class NotificationSyncer
     {
         Notification::whereIn('id', $ids)->update(['is_deleted' => $isDeleted]);
     }
-
-
 
     /**
      * Construct an array of attributes to be stored in a notification record in
