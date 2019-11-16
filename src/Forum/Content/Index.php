@@ -66,7 +66,7 @@ class Index
         $page = Arr::pull($queryParams, 'page', 1);
 
         // Fix PHP notices if $page is not numeric when calculating offset
-        if (!is_numeric($page) || $page < 1) {
+        if (! is_numeric($page) || $page < 1) {
             $page = 1;
         }
 
