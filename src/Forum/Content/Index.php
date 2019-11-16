@@ -65,6 +65,11 @@ class Index
         $q = Arr::pull($queryParams, 'q');
         $page = Arr::pull($queryParams, 'page', 1);
 
+        // Fix PHP notices if $page is not numeric when calculating offset
+        if (!is_numeric($page) || $page < 1) {
+            $page = 1;
+        }
+
         $sortMap = $this->getSortMap();
 
         $params = [
