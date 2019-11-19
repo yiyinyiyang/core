@@ -18,7 +18,6 @@ use Flarum\Notification\Event\Sending;
 use Flarum\Notification\MailableInterface;
 use Flarum\Notification\Notification;
 use Flarum\Notification\NotificationMailer;
-use Flarum\Notification\NotificationSyncer;
 use Flarum\Queue\AbstractJob;
 use Flarum\User\User;
 
