@@ -66,7 +66,7 @@ class NotificationSyncer
      */
     public function sync(Blueprint\BlueprintInterface $blueprint, array $users)
     {
-        $attributes = static::getAttributes($blueprint);
+        $attributes = $blueprint->getAttributes();
 
         // Find all existing notification records in the database matching this
         // blueprint. We will begin by assuming that they all need to be
@@ -84,7 +84,7 @@ class NotificationSyncer
                 continue;
             }
 
-            $existing = $toDelete->first(function ($notification, $i) use ($user) {
+            $existing = $toDelete->first(function ($notification) use ($user) {
                 return $notification->user_id === $user->id;
             });
 
@@ -124,7 +124,7 @@ class NotificationSyncer
      */
     public function delete(BlueprintInterface $blueprint)
     {
-        Notification::where($this->getAttributes($blueprint))->update(['is_deleted' => true]);
+        Notification::where($blueprint->getAttributes())->update(['is_deleted' => true]);
     }
 
     /**
@@ -135,7 +135,7 @@ class NotificationSyncer
      */
     public function restore(BlueprintInterface $blueprint)
     {
-        Notification::where($this->getAttributes($blueprint))->update(['is_deleted' => false]);
+        Notification::where($blueprint->getAttributes())->update(['is_deleted' => false]);
     }
 
     /**
@@ -164,22 +164,5 @@ class NotificationSyncer
     protected function setDeleted(array $ids, $isDeleted)
     {
         Notification::whereIn('id', $ids)->update(['is_deleted' => $isDeleted]);
-    }
-
-    /**
-     * Construct an array of attributes to be stored in a notification record in
-     * the database, given a notification blueprint.
-     *
-     * @param \Flarum\Notification\Blueprint\BlueprintInterface $blueprint
-     * @return array
-     */
-    public static function getAttributes(Blueprint\BlueprintInterface $blueprint)
-    {
-        return [
-            'type' => $blueprint::getType(),
-            'from_user_id' => ($fromUser = $blueprint->getFromUser()) ? $fromUser->id : null,
-            'subject_id' => ($subject = $blueprint->getSubject()) ? $subject->id : null,
-            'data' => ($data = $blueprint->getData()) ? json_encode($data) : null
-        ];
     }
 }

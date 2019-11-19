@@ -46,7 +46,7 @@ class SendNotificationsJob extends AbstractJob
 
         event(new Sending($this->blueprint, $recipients));
 
-        $attributes = NotificationSyncer::getAttributes($this->blueprint);
+        $attributes = $this->blueprint->getAttributes();
 
         Notification::insert(
             array_map(function (User $user) use ($attributes, $now) {
