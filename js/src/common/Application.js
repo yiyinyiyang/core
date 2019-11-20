@@ -331,7 +331,7 @@ export default class Application {
       }
 
       const isDebug = app.forum.attribute('debug');
-      const formattedError = error.response && Array.isArray(error.response.errors) && error.response.errors.map(e => unescape(e.detail));
+      const formattedError = error.response && Array.isArray(error.response.errors) && error.response.errors.map(e => decodeURI(e.detail));
 
       error.alert = new Alert({
         type: 'error',
@@ -353,7 +353,6 @@ export default class Application {
         }
 
         this.alerts.show(error.alert);
-        this.modal.close();
 
       }
 
