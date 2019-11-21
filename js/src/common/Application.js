@@ -331,6 +331,8 @@ export default class Application {
       }
 
       const isDebug = app.forum.attribute('debug');
+      // contains a formatted errors if possible, response must be an JSON API array of errors
+      // the details property is decoded to transform escaped characters such as '\n'
       const formattedError = error.response && Array.isArray(error.response.errors) && error.response.errors.map(e => decodeURI(e.detail));
 
       error.alert = new Alert({
