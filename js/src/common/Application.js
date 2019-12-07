@@ -258,10 +258,6 @@ export default class Application {
     // error message to the user instead.
     options.deserialize = options.deserialize || (responseText => responseText);
 
-    options.errorHandler = options.errorHandler || (error => {
-      throw error;
-    });
-
     // When extracting the data from the response, we can check the server
     // response code and show an error message to the user if something's gone
     // awry.
@@ -298,6 +294,8 @@ export default class Application {
     // Now make the request. If it's a failure, inspect the error that was
     // returned and show an alert containing its contents.
     const deferred = m.deferred();
+
+    console.log(options);
 
     m.request(options).then(response => deferred.resolve(response), error => {
       this.requestError = error;
@@ -343,11 +341,14 @@ export default class Application {
         ]
       });
 
-      try {
+      if (options.errorHandler) {
         options.errorHandler(error);
-      } catch (error) {
+      } else {
         if (isDebug) {
-          console.group(`${error.options.method} ${error.options.url} ${error.xhr ? error.xhr.status : ''}`);
+          const { method, url } = error.options;
+          const { status = '' } = error.xhr;
+
+          console.group(`${method} ${url} ${status}`);
 
           console.error(...formattedError || [error]);
 
@@ -355,7 +356,6 @@ export default class Application {
         }
 
         this.alerts.show(error.alert);
-
       }
 
       deferred.reject(error);
