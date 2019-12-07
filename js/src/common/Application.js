@@ -295,8 +295,6 @@ export default class Application {
     // returned and show an alert containing its contents.
     const deferred = m.deferred();
 
-    console.log(options);
-
     m.request(options).then(response => deferred.resolve(response), error => {
       this.requestError = error;
 
