@@ -11,6 +11,7 @@ namespace Flarum\Tests\integration\api\Controller;
 
 use Flarum\Api\Controller\ListGroupsController;
 use Flarum\Group\Group;
+use Flarum\User\User;
 
 class ListGroupsControllerTest extends ApiControllerTestCase
 {
@@ -53,7 +54,7 @@ class ListGroupsControllerTest extends ApiControllerTestCase
      */
     public function shows_index_for_admin()
     {
-        $this->actor = $this->adminUser();
+        $this->actor = User::find(1);
         $response = $this->callWith();
 
         $this->assertEquals(200, $response->getStatusCode());
