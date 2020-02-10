@@ -3,10 +3,8 @@
 /*
  * This file is part of Flarum.
  *
- * (c) Toby Zerner <toby.zerner@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * For detailed copyright and license information, please view the
+ * LICENSE file that was distributed with this source code.
  */
 
 namespace Flarum\Queue;
@@ -33,7 +31,7 @@ class QueueServiceProvider extends AbstractServiceProvider
         Commands\ForgetFailedCommand::class,
         Console\ListenCommand::class,
         Commands\ListFailedCommand::class,
-//        Commands\RestartCommand::class,
+        //        Commands\RestartCommand::class,
         Commands\RetryCommand::class,
         Commands\WorkCommand::class,
     ];

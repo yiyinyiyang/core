@@ -3,15 +3,12 @@
 /*
  * This file is part of Flarum.
  *
- * (c) Toby Zerner <toby.zerner@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * For detailed copyright and license information, please view the
+ * LICENSE file that was distributed with this source code.
  */
 
 namespace Flarum\Notification\Job;
 
-use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\MailableInterface;
 use Flarum\Notification\NotificationMailer;
 use Flarum\Queue\AbstractJob;
@@ -33,6 +30,7 @@ class SendEmailNotificationJob extends AbstractJob
         $this->blueprint = $blueprint;
         $this->recipient = $recipient;
     }
+
     public function handle(NotificationMailer $mailer)
     {
         $mailer->send($this->blueprint, $this->recipient);
