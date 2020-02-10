@@ -12,6 +12,7 @@
 namespace Flarum\Notification;
 
 use Flarum\Notification\Blueprint\BlueprintInterface;
+use Flarum\Notification\Job\SendEmailNotificationJob;
 use Flarum\Notification\Job\SendNotificationsJob;
 use Flarum\User\User;
 use Illuminate\Contracts\Queue\Queue;
@@ -113,6 +114,15 @@ class NotificationSyncer
         // didn't have a record in the database).
         if (count($newRecipients)) {
             $this->queue->push(new SendNotificationsJob($blueprint, $newRecipients));
+        }
+
+        if ($blueprint instanceof MailableInterface) {
+            /** @var User $recipient */
+            foreach($newRecipients as $recipient) {
+                if ($recipient->shouldEmail($blueprint::getType())) {
+                    $this->queue->push(new SendEmailNotificationJob($blueprint, $recipient));
+                }
+            }
         }
     }
 
